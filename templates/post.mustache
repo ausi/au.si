@@ -1,0 +1,15 @@
+{{> head}}
+<div class="page h-entry">
+	<article class="post">
+		<header class="post-header">
+			<h1 class="post-headline p-name">{{title}}</h1>
+			<time class="post-date dt-published" datetime="{{date.iso}}"><a class="u-url" href="/{{key}}">{{date.day}} {{date.month}} {{date.year}}</a></time>
+		</header>
+		<div class="e-content">
+			{{{intro}}}
+			{{{content}}}
+		</div>
+	</article>
+	{{> profile}}
+</div>
+{{> foot}}
