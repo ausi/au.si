@@ -4,15 +4,15 @@
 		{{#posts}}
 			<article class="post h-entry">
 				<header class="post-header">
-					<h1 class="post-headline"><a href="/{{key}}" class="p-name">{{title}}</a></h1>
+					<h1 class="post-headline"><a href="/{{key}}" class="p-name u-url">{{title}}</a></h1>
 					<time class="post-date dt-published" datetime="{{date.iso}}">{{date.day}} {{date.month}} {{date.year}}</time>
 				</header>
 				<div class="p-summary">
 					{{{intro}}}
 				</div>
-				{{#description}}
+				{{#content}}
 					<a class="u-url" href="/{{key}}">Read more...</a>
-				{{/description}}
+				{{/content}}
 			</article>
 		{{/posts}}
 	</div>
