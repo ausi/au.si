@@ -137,8 +137,13 @@ function stripTags(html) {
 }
 
 function minifyHtml(html) {
-	return html.replace(/(<pre[^>]*>.*?<\/pre>)|(\n)\s+/gi, function(match, pre, lineBreak) {
-		return pre || lineBreak;
+	return html.replace(/(<pre[^>]*>[^]*?<\/pre>)|(\n)\s+/gi, function(match, pre, lineBreak) {
+		if (pre) {
+			return pre.replace(/(?:^|\n)(?: {4})+[^ ]/g, function(match) {
+				return match.replace(/ {4}/g, '\t');
+			});
+		}
+		return lineBreak;
 	});
 }
 
