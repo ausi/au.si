@@ -63,13 +63,28 @@ In the compute style step the browser would do the following:
 
 2. Start traversing the DOM tree
 
-3. Matching the element `html` against all style rules which results in `display: block; width: auto;`. With this computed style we know that this element doesn’t depend on its descendants and we can inherit the container width from the parent node. So we store `container-width = 800` for the `html` node. Same for `body`.
+3. Matching the element `html` against style rules which results in
+	```css
+	{ display: block; width: auto }
+	```
+	With this computed style we know that this element doesn’t depend on its descendants and we can inherit the container width from the parent node. So we store `container-width = 800` for the `html` node. Same for `body`.
 
-4. Matching the element `div.level-1` against style rules resulting in `display: block; width: auto; padding-left: 10px; padding-right: 10px;`. With this computed style we know that this element doesn’t depend on its descendants and we can again inherit the container width from the parent node. This time there is also a padding on the element, which we have to taken into account. So we store `container-width = 780` for the `.level-1` node.
+4. Matching the element `div.level-1` against style rules resulting
+	```css
+	{ display: block; width: auto; padding: 10px }
+	```
+	With this computed style we know that this element doesn’t depend on its descendants and we can again inherit the container width from the parent node. This time there is also a padding on the element, which we have to taken into account. So we store `container-width = 780` for the `.level-1` node.
 
-5. Matching the element `div.level-2` against style rules resulting in `display: block; width: auto; float: left;`. Now we have an element whose width does depend on its descendants so we have to store something like `container-width = not-applicable`.
+5. Matching the element `div.level-2` against style rules resulting
+	```css
+	{ display: block; width: auto; float: left }
+	```
+	Now we have an element whose width does depend on its descendants so we have to store something like `container-width = not-applicable`.
 
-6. Matching the element `div.level-3` against style rules and hitting a rule with a container query in it. To determine if this rule matches we check the `container-width` of the parent node, which is `not-applicable`, so we go to the next parent to ask for `container-width` and get the value `780` back. Now we match `780` against `min-width: 150px` which matches and so the rule matches. The computed style for this element is now `background: green;`.
+6. Matching the element `div.level-3` against style rules and hitting a rule with a container query in it. To determine if this rule matches we check the `container-width` of the parent node, which is `not-applicable`, so we go to the next parent to ask for `container-width` and get the value `780` back. Now we match `780` against `width > 150px` which matches and so the rule matches. The computed style for this element is now
+	```css
+	{ display: block; width: auto; background: green }
+	```
 
 7. Finished traversing the DOM tree. All styles are computed now and we can go to the layout step.
 
