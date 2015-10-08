@@ -5,7 +5,7 @@
 <title>CSS Container &#x2F; Element Queries Update</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Two months ago I posted about a proposal for container queries (aka element queries). This article is about an update to the syntax and an in-depth explanation of the intended browser implementation.">
-<style>html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,footer,header{display:block}a{background-color:transparent}a:active,a:hover{outline:0}img{border:0}pre{overflow:auto}code,pre{font-family:monospace;font-size:1em}html{box-sizing:border-box;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font:87.5%/1.5 sans-serif;letter-spacing:.02em;color:#000}@media (min-width:600px){html{font-size:100%}}@media (min-width:800px){html{font-size:112.5%}}@media (min-width:1000px){html{font-size:125%}}*,:after,:before{box-sizing:inherit}h1,h2,h3{margin:1.5em 0 .5em;font-family:Georgia,serif}h1,h2{line-height:1.2}h1{font-size:1.75em}h2{font-size:1.25em}h3{font-size:1.1em}p{margin:1em 0}a{color:#2d7ab3;text-decoration:none}a:visited{color:#882db3}a:focus,a:hover{color:#2d7ab3;text-decoration:underline}code,pre{border-radius:.2em;color:#fff;background:#000}code{padding:.1em .3em;font-size:.9em}pre{padding:.5em .75em;-webkit-overflow-scrolling:touch}pre>code{padding:0}.page{max-width:35em;margin:0 auto;padding:1em 2em}.post{padding-bottom:3em;border-bottom:2px solid #ccc}.post-header{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-align:baseline;-webkit-align-items:baseline;-ms-flex-align:baseline;align-items:baseline;-webkit-box-pack:justify;-webkit-justify-content:space-between;-ms-flex-pack:justify;justify-content:space-between}.post-date{min-width:4em;margin-left:1em;text-align:right}.post-date>a{color:inherit}.post-date>a:focus,.post-date>a:hover{color:#2d7ab3;text-decoration:none}.profile{margin:4em 0 2em;text-align:center;font-size:.8em}.profile-image{display:block;margin:0 auto;width:70px;border:3px solid transparent;border-radius:99em;overflow:hidden;background:-webkit-radial-gradient(31px,#000 97%,transparent 100%) no-repeat;background:radial-gradient(31px,#000 97%,transparent 100%) no-repeat}.profile-image:focus,.profile-image:hover{border-color:#2d7ab3}.profile-image>img{display:block;width:4pc;height:4pc}.profile>h3{margin:1em 0 0}.profile>p{margin:.5em 0 0}.profile a{color:inherit}.profile a:focus,.profile a:hover{color:#2d7ab3;text-decoration:none}</style>
+<style>html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,footer,header{display:block}a{background-color:transparent}a:active,a:hover{outline:0}img{border:0}pre{overflow:auto}code,pre{font-family:monospace;font-size:1em}html{box-sizing:border-box;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font:87.5%/1.5 sans-serif;letter-spacing:.02em;color:#000}@media (min-width:600px){html{font-size:100%}}@media (min-width:800px){html{font-size:112.5%}}@media (min-width:1000px){html{font-size:125%}}*,:after,:before{box-sizing:inherit}h1,h2,h3{margin:1.5em 0 .5em;font-family:Georgia,serif}h1,h2{line-height:1.2}h1{font-size:1.75em}h2{font-size:1.25em}h3{font-size:1.1em}p{margin:1em 0}a{color:#2d7ab3;text-decoration:none}a:visited{color:#882db3}a:focus,a:hover{color:#2d7ab3;text-decoration:underline}code,pre{border-radius:.2em;color:#fff;background:#000}code{padding:.1em .3em;font-size:.9em}pre{padding:.5em .75em;-webkit-overflow-scrolling:touch}pre>code{padding:0}.page{max-width:35em;margin:0 auto;padding:1em 2em}.post{padding-bottom:3em;border-bottom:2px solid #ccc}.post-header{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-align:baseline;-webkit-align-items:baseline;-ms-flex-align:baseline;align-items:baseline;-webkit-box-pack:justify;-webkit-justify-content:space-between;-ms-flex-pack:justify;justify-content:space-between}.post-date{min-width:4em;margin-left:1em;text-align:right}.post-date>a{color:inherit}.post-date>a:focus,.post-date>a:hover{color:#2d7ab3;text-decoration:none}.profile{margin:4em 0 2em;text-align:center;font-size:.8em}.profile-image{display:block;margin:0 auto;width:70px;border:3px solid transparent;border-radius:99em;overflow:hidden;background:-webkit-radial-gradient(31px,#000 97%,transparent 100%) no-repeat;background:radial-gradient(31px,#000 97%,transparent 100%) no-repeat}.profile-image:focus,.profile-image:hover{border-color:#2d7ab3}.profile-image>img{display:block;width:4pc;height:4pc}.profile>h3{margin:1em 0 0}.profile>p{margin:.5em 0 0}.profile a{color:inherit}.profile a:focus,.profile a:hover{color:#2d7ab3;text-decoration:none}.token.comment{color:#708090}.token.punctuation{color:#f8f8f2}.token.constant,.token.property,.token.tag{color:#f92672}.token.attr-name,.token.selector{color:#a6e22e}.token.attr-value{color:#e6db74}.token.important{color:#fd971f;font-weight:700}</style>
 <link rel="canonical" href="https://au.si/css-container-element-queries">
 <link rel="icon" href="/images/profile-64.jpg" type="image/jpeg">
 </head>
@@ -20,41 +20,41 @@
 <p>Two months ago I posted about <a href="/css-container-queries">a proposal for container queries</a> (aka element queries). This article is about an update to the syntax and an in-depth explanation of the intended browser implementation.</p>
 <h2 id="new-syntax">New syntax</h2>
 <p>The <a href="https://github.com/ausi/cq-prolyfill">prolyfill</a> is now available in version <a href="https://github.com/ausi/cq-prolyfill/releases/tag/v0.2.0">0.2.0</a> and with this update the syntax changed a little bit. Instead of <code>:container(min-width: 150px)</code> it’s now <code>:container(width &gt; 149px)</code>. The great benefit from this syntax change is that now every CSS property can be queried, e.g. <code>:container(font-size &lt; 10px)</code> or <code>:container(text-align = right)</code>. The prolyfill now fully supports container queries for all CSS properties, you can take a look at the demo here: <a href="https://ausi.github.io/cq-prolyfill/demo/">https://ausi.github.io/cq-prolyfill/demo/</a>. Container queries can now be used like so:</p>
-<pre><code class="lang-css">.element:container(width &gt;= 100px) {
-	/* If it’s container is at least 100px wide */
-}
-.element:container(height &gt; 100px &lt; 200px) {
-	/* If it’s container is between 100px and 200px high */
-}
-.element:container(text-align = right) {
-	/* If it’s container has a right text-align */
-}
+<pre><code class="lang-css"><span class="token selector" >.element:container(width >= 100px)</span> <span class="token punctuation" >{</span>
+	<span class="token comment" spellcheck="true">/* If it’s container is at least 100px wide */</span>
+<span class="token punctuation" >}</span>
+<span class="token selector" >.element:container(height > 100px &lt; 200px)</span> <span class="token punctuation" >{</span>
+	<span class="token comment" spellcheck="true">/* If it’s container is between 100px and 200px high */</span>
+<span class="token punctuation" >}</span>
+<span class="token selector" >.element:container(text-align = right)</span> <span class="token punctuation" >{</span>
+	<span class="token comment" spellcheck="true">/* If it’s container has a right text-align */</span>
+<span class="token punctuation" >}</span>
 </code></pre>
 <h2 id="ready-to-use">Ready to use</h2>
 <p>With the new version, the prolyfill is now unit tested and pretty stable (thanks to BrowserStack for sponsoring their great <a href="https://www.browserstack.com/automate">automated cross browser testing</a>). Feel free to use it in your next project. If you find any issues please <a href="https://github.com/ausi/cq-prolyfill/issues">file a bug on GitHub</a>.</p>
 <h2 id="browser-implementation">Browser Implementation</h2>
 <p>I wrote about a browser implementation in <a href="/css-container-queries#possible-browser-implementation">my previous article</a> and want to explain it in more detail here. The basic idea is to do some layout calculations already in the compute style step of the rendering engine.</p>
 <p>Let’s take the following example HTML:</p>
-<pre><code class="lang-html">&lt;html&gt;
-	&lt;body&gt;
-		&lt;div class=&quot;level-1&quot;&gt;
-			&lt;div class=&quot;level-2&quot;&gt;
-				&lt;div class=&quot;level-3&quot;&gt;&lt;/div&gt;
-			&lt;/div&gt;
-		&lt;/div&gt;
-	&lt;/body&gt;
-&lt;/html&gt;
+<pre><code class="lang-html"><span class="token tag" ><span class="token tag" ><span class="token punctuation" >&lt;</span>html</span><span class="token punctuation" >></span></span>
+	<span class="token tag" ><span class="token tag" ><span class="token punctuation" >&lt;</span>body</span><span class="token punctuation" >></span></span>
+		<span class="token tag" ><span class="token tag" ><span class="token punctuation" >&lt;</span>div</span> <span class="token attr-name" >class</span><span class="token attr-value" ><span class="token punctuation" >=</span><span class="token punctuation" >"</span>level-1<span class="token punctuation" >"</span></span><span class="token punctuation" >></span></span>
+			<span class="token tag" ><span class="token tag" ><span class="token punctuation" >&lt;</span>div</span> <span class="token attr-name" >class</span><span class="token attr-value" ><span class="token punctuation" >=</span><span class="token punctuation" >"</span>level-2<span class="token punctuation" >"</span></span><span class="token punctuation" >></span></span>
+				<span class="token tag" ><span class="token tag" ><span class="token punctuation" >&lt;</span>div</span> <span class="token attr-name" >class</span><span class="token attr-value" ><span class="token punctuation" >=</span><span class="token punctuation" >"</span>level-3<span class="token punctuation" >"</span></span><span class="token punctuation" >></span></span><span class="token tag" ><span class="token tag" ><span class="token punctuation" >&lt;/</span>div</span><span class="token punctuation" >></span></span>
+			<span class="token tag" ><span class="token tag" ><span class="token punctuation" >&lt;/</span>div</span><span class="token punctuation" >></span></span>
+		<span class="token tag" ><span class="token tag" ><span class="token punctuation" >&lt;/</span>div</span><span class="token punctuation" >></span></span>
+	<span class="token tag" ><span class="token tag" ><span class="token punctuation" >&lt;/</span>body</span><span class="token punctuation" >></span></span>
+<span class="token tag" ><span class="token tag" ><span class="token punctuation" >&lt;/</span>html</span><span class="token punctuation" >></span></span>
 </code></pre>
 <p>With this CSS:</p>
-<pre><code class="lang-css">.level-1 {
-	padding: 10px;
-}
-.level-2 {
-	float: left;
-}
-.level-3:container(width &gt; 150px) {
-	background: green;
-}
+<pre><code class="lang-css"><span class="token selector" >.level-1</span> <span class="token punctuation" >{</span>
+	<span class="token property" >padding</span><span class="token punctuation" >:</span> 10px<span class="token punctuation" >;</span>
+<span class="token punctuation" >}</span>
+<span class="token selector" >.level-2</span> <span class="token punctuation" >{</span>
+	<span class="token property" >float</span><span class="token punctuation" >:</span> left<span class="token punctuation" >;</span>
+<span class="token punctuation" >}</span>
+<span class="token selector" >.level-3:container(width > 150px)</span> <span class="token punctuation" >{</span>
+	<span class="token property" >background</span><span class="token punctuation" >:</span> green<span class="token punctuation" >;</span>
+<span class="token punctuation" >}</span>
 </code></pre>
 <p>And lets assume a viewport of 800x600.</p>
 <p>In the compute style step the browser would do the following:</p>
@@ -63,46 +63,57 @@
 </li>
 <li><p>Start traversing the DOM tree</p>
 </li>
-<li><p>Matching the element <code>html</code> against all style rules which results in <code>display: block; width: auto;</code>. With this computed style we know that this element doesn’t depend on its descendants and we can inherit the container width from the parent node. So we store <code>container-width = 800</code> for the <code>html</code> node. Same for <code>body</code>.</p>
+<li><p>Matching the element <code>html</code> against style rules which results in</p>
+<pre><code class="lang-css"> <span class="token punctuation" >{</span> <span class="token property" >display</span><span class="token punctuation" >:</span> block<span class="token punctuation" >;</span> <span class="token property" >width</span><span class="token punctuation" >:</span> auto <span class="token punctuation" >}</span>
+</code></pre>
+<p> With this computed style we know that this element doesn’t depend on its descendants and we can inherit the container width from the parent node. So we store <code>container-width = 800</code> for the <code>html</code> node. Same for <code>body</code>.</p>
 </li>
-<li><p>Matching the element <code>div.level-1</code> against style rules resulting in <code>display: block; width: auto; padding-left: 10px; padding-right: 10px;</code>. With this computed style we know that this element doesn’t depend on its descendants and we can again inherit the container width from the parent node. This time there is also a padding on the element, which we have to taken into account. So we store <code>container-width = 780</code> for the <code>.level-1</code> node.</p>
+<li><p>Matching the element <code>div.level-1</code> against style rules resulting</p>
+<pre><code class="lang-css"> <span class="token punctuation" >{</span> <span class="token property" >display</span><span class="token punctuation" >:</span> block<span class="token punctuation" >;</span> <span class="token property" >width</span><span class="token punctuation" >:</span> auto<span class="token punctuation" >;</span> <span class="token property" >padding</span><span class="token punctuation" >:</span> 10px <span class="token punctuation" >}</span>
+</code></pre>
+<p> With this computed style we know that this element doesn’t depend on its descendants and we can again inherit the container width from the parent node. This time there is also a padding on the element, which we have to taken into account. So we store <code>container-width = 780</code> for the <code>.level-1</code> node.</p>
 </li>
-<li><p>Matching the element <code>div.level-2</code> against style rules resulting in <code>display: block; width: auto; float: left;</code>. Now we have an element whose width does depend on its descendants so we have to store something like <code>container-width = not-applicable</code>.</p>
+<li><p>Matching the element <code>div.level-2</code> against style rules resulting</p>
+<pre><code class="lang-css"> <span class="token punctuation" >{</span> <span class="token property" >display</span><span class="token punctuation" >:</span> block<span class="token punctuation" >;</span> <span class="token property" >width</span><span class="token punctuation" >:</span> auto<span class="token punctuation" >;</span> <span class="token property" >float</span><span class="token punctuation" >:</span> left <span class="token punctuation" >}</span>
+</code></pre>
+<p> Now we have an element whose width does depend on its descendants so we have to store something like <code>container-width = not-applicable</code>.</p>
 </li>
-<li><p>Matching the element <code>div.level-3</code> against style rules and hitting a rule with a container query in it. To determine if this rule matches we check the <code>container-width</code> of the parent node, which is <code>not-applicable</code>, so we go to the next parent to ask for <code>container-width</code> and get the value <code>780</code> back. Now we match <code>780</code> against <code>min-width: 150px</code> which matches and so the rule matches. The computed style for this element is now <code>background: green;</code>.</p>
+<li><p>Matching the element <code>div.level-3</code> against style rules and hitting a rule with a container query in it. To determine if this rule matches we check the <code>container-width</code> of the parent node, which is <code>not-applicable</code>, so we go to the next parent to ask for <code>container-width</code> and get the value <code>780</code> back. Now we match <code>780</code> against <code>width &gt; 150px</code> which matches and so the rule matches. The computed style for this element is now</p>
+<pre><code class="lang-css"> <span class="token punctuation" >{</span> <span class="token property" >display</span><span class="token punctuation" >:</span> block<span class="token punctuation" >;</span> <span class="token property" >width</span><span class="token punctuation" >:</span> auto<span class="token punctuation" >;</span> <span class="token property" >background</span><span class="token punctuation" >:</span> green <span class="token punctuation" >}</span>
+</code></pre>
 </li>
 <li><p>Finished traversing the DOM tree. All styles are computed now and we can go to the layout step.</p>
 </li>
 </ol>
 <p>The computed style would now look like this:</p>
-<pre><code>[Node html]
-	display = block
-	width = auto
-	container-width = 800
+<pre><code class="lang-ini"><span class="token important" >[Node html]</span>
+<span class="token constant" >    display</span> <span class="token attr-value" ><span class="token punctuation" >=</span> block</span>
+<span class="token constant" >    width</span> <span class="token attr-value" ><span class="token punctuation" >=</span> auto</span>
+<span class="token constant" >    container-width</span> <span class="token attr-value" ><span class="token punctuation" >=</span> 800</span>
 
-[Node body]
-	display = block
-	width = auto
-	container-width = 800
+<span class="token important" >[Node body]</span>
+<span class="token constant" >    display</span> <span class="token attr-value" ><span class="token punctuation" >=</span> block</span>
+<span class="token constant" >    width</span> <span class="token attr-value" ><span class="token punctuation" >=</span> auto</span>
+<span class="token constant" >    container-width</span> <span class="token attr-value" ><span class="token punctuation" >=</span> 800</span>
 
-[Node .level-1]
-	display = block
-	width = auto
-	padding-right = 10
-	padding-left = 10
-	container-width = 780
+<span class="token important" >[Node .level-1]</span>
+<span class="token constant" >    display</span> <span class="token attr-value" ><span class="token punctuation" >=</span> block</span>
+<span class="token constant" >    width</span> <span class="token attr-value" ><span class="token punctuation" >=</span> auto</span>
+<span class="token constant" >    padding-right</span> <span class="token attr-value" ><span class="token punctuation" >=</span> 10</span>
+<span class="token constant" >    padding-left</span> <span class="token attr-value" ><span class="token punctuation" >=</span> 10</span>
+<span class="token constant" >    container-width</span> <span class="token attr-value" ><span class="token punctuation" >=</span> 780</span>
 
-[Node .level-2]
-	display = block
-	width = auto
-	float = left
-	container-width = not-applicable
+<span class="token important" >[Node .level-2]</span>
+<span class="token constant" >    display</span> <span class="token attr-value" ><span class="token punctuation" >=</span> block</span>
+<span class="token constant" >    width</span> <span class="token attr-value" ><span class="token punctuation" >=</span> auto</span>
+<span class="token constant" >    float</span> <span class="token attr-value" ><span class="token punctuation" >=</span> left</span>
+<span class="token constant" >    container-width</span> <span class="token attr-value" ><span class="token punctuation" >=</span> not-applicable</span>
 
-[Node .level-3]
-	display = block
-	width = auto
-	background = green
-	container-width = not-applicable
+<span class="token important" >[Node .level-3]</span>
+<span class="token constant" >    display</span> <span class="token attr-value" ><span class="token punctuation" >=</span> block</span>
+<span class="token constant" >    width</span> <span class="token attr-value" ><span class="token punctuation" >=</span> auto</span>
+<span class="token constant" >    background</span> <span class="token attr-value" ><span class="token punctuation" >=</span> green</span>
+<span class="token constant" >    container-width</span> <span class="token attr-value" ><span class="token punctuation" >=</span> not-applicable</span>
 </code></pre>
 </div>
 </article>
