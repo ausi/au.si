@@ -75,7 +75,7 @@ In the compute style step the browser would do the following:
 
 The computed style would now look like this:
 
-```
+```ini
 [Node html]
 	display = block
 	width = auto

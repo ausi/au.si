@@ -10,6 +10,8 @@ var marked = require('marked');
 var mustache = require('mustache');
 var request = require('request');
 var lwip = require('lwip');
+var prism = require('prismjs');
+require('prismjs/components/prism-ini');
 
 var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -18,6 +20,11 @@ var markdownConfig = {
 	tables: true,
 	breaks: true,
 	sanitize: true,
+	highlight: function (code, lang) {
+		if (lang && prism.languages[lang]) {
+			return prism.highlight(code, prism.languages[lang], lang);
+		}
+	},
 };
 
 var templates = {};
@@ -30,6 +37,8 @@ var styles = sass.renderSync({
 	file: path.join(__dirname, 'styles.sass'),
 	outputStyle: 'compressed',
 }).css.toString();
+
+styles += fs.readFileSync(path.join(__dirname, 'node_modules', 'prismjs', 'themes', 'prism-okaidia.css'), 'utf-8');
 
 var posts = [];
 
