@@ -128,7 +128,12 @@ pre
 		display: flex
 		align-items: baseline
 		justify-content: space-between
+		flex-wrap: wrap
+		margin-right: -0.5em
+		margin-left: -0.5em
 	&-headline
+		padding-right: (0.5em / 1.75)
+		padding-left: (0.5em / 1.75)
 		> a
 			color: inherit
 			&:visited
@@ -137,9 +142,8 @@ pre
 				color: $link-color
 				text-decoration: none
 	&-date
-		min-width: 4em
-		margin-left: 1em
-		text-align: right
+		padding-right: 0.5em
+		padding-left: 0.5em
 		> a
 			color: inherit
 			&:hover, &:focus
