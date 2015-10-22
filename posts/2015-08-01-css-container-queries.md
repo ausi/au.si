@@ -62,3 +62,5 @@ To test my idea I created a prolyfill for my version of container queries, you c
 ## Further ideas
 
 I wrote here mainly about querying the width and the prolyfill currently only supports width and height. But with my imaginary browser implementation in mind it should be easy to extend container queries to nearly all CSS properties. For example querying the font size or the background color could be helpful to create encapsulated components that look good everywhere. The syntax could be changed to reflect that better like `:container(width > 149px)` or `:container(font-size < 10px)`. And most likely there is a better name for the `:container(` part.
+
+Follow-up: [CSS Container / Element Queries Update](/css-container-element-queries).
