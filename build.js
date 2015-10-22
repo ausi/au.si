@@ -2,7 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var crypto = require('crypto');
 var sass = require('node-sass');
-var autoprefixer = require('autoprefixer-core');
+var autoprefixer = require('autoprefixer');
 var postcss = require('postcss');
 var cssnano = require('cssnano');
 var uncss = require('uncss');
@@ -123,12 +123,14 @@ function buildPage(key, template, data, callback) {
 				console.error(error);
 				process.exit(1);
 			}
-			data.styles = postcss([autoprefixer, cssnano()]).process(newStyles).css;
-			fs.writeFileSync(
-				path.join(__dirname, 'dist', key + '.html'),
-				minifyHtml(mustache.render(template, data, templates))
-			);
-			callback();
+			postcss([autoprefixer, cssnano()]).process(newStyles).then(function(css) {
+				data.styles = css;
+				fs.writeFileSync(
+					path.join(__dirname, 'dist', key + '.html'),
+					minifyHtml(mustache.render(template, data, templates))
+				);
+				callback();
+			});
 		}
 	);
 }
