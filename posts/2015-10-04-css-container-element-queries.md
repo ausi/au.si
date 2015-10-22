@@ -120,3 +120,7 @@ The computed style would now look like this:
 	background = green
 	container-width = not-applicable
 ```
+
+## Further details
+
+Take a look at the discussion on GitHub [RICG/container-queries#3](https://github.com/ResponsiveImagesCG/container-queries/issues/3) or try out the prolyfill [ausi/cq-prolyfill](https://github.com/ausi/cq-prolyfill).
