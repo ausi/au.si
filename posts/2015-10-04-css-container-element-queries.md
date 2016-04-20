@@ -9,13 +9,13 @@ The [prolyfill](https://github.com/ausi/cq-prolyfill) is now available in versio
 
 ```css
 .element:container(width >= 100px) {
-	/* If it’s container is at least 100px wide */
+	/* If its container is at least 100px wide */
 }
 .element:container(height > 100px < 200px) {
-	/* If it’s container is between 100px and 200px high */
+	/* If its container is between 100px and 200px high */
 }
 .element:container(text-align = right) {
-	/* If it’s container has a right text-align */
+	/* If its container has a right text-align */
 }
 ```
 
