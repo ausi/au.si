@@ -21,13 +21,13 @@
 <h2 id="new-syntax">New syntax</h2>
 <p>The <a href="https://github.com/ausi/cq-prolyfill">prolyfill</a> is now available in version <a href="https://github.com/ausi/cq-prolyfill/releases/tag/v0.2.0">0.2.0</a> and with this update the syntax changed a little bit. Instead of <code>:container(min-width: 150px)</code> it’s now <code>:container(width &gt; 149px)</code>. The great benefit from this syntax change is that now every CSS property can be queried, e.g. <code>:container(font-size &lt; 10px)</code> or <code>:container(text-align = right)</code>. The prolyfill now fully supports container queries for all CSS properties, you can take a look at the demo here: <a href="https://ausi.github.io/cq-prolyfill/demo/">https://ausi.github.io/cq-prolyfill/demo/</a>. Container queries can now be used like so:</p>
 <pre><code class="lang-css"><span class="token selector" >.element:container(width >= 100px)</span> <span class="token punctuation" >{</span>
-	<span class="token comment" spellcheck="true">/* If it’s container is at least 100px wide */</span>
+	<span class="token comment" spellcheck="true">/* If its container is at least 100px wide */</span>
 <span class="token punctuation" >}</span>
 <span class="token selector" >.element:container(height > 100px &lt; 200px)</span> <span class="token punctuation" >{</span>
-	<span class="token comment" spellcheck="true">/* If it’s container is between 100px and 200px high */</span>
+	<span class="token comment" spellcheck="true">/* If its container is between 100px and 200px high */</span>
 <span class="token punctuation" >}</span>
 <span class="token selector" >.element:container(text-align = right)</span> <span class="token punctuation" >{</span>
-	<span class="token comment" spellcheck="true">/* If it’s container has a right text-align */</span>
+	<span class="token comment" spellcheck="true">/* If its container has a right text-align */</span>
 <span class="token punctuation" >}</span>
 </code></pre>
 <h2 id="ready-to-use">Ready to use</h2>

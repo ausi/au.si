@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Responsive Images and art direction or viewport&#x2F;DPR-based selection</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="When it comes to responsive images there are two main topics that are handled by &lt;picture&gt;, &lt;source&gt;, srcset and sizes:">
+<style>html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,footer,header{display:block}a{background-color:transparent}a:active,a:hover{outline:0}strong{font-weight:700}img{border:0}code{font-family:monospace;font-size:1em}html{box-sizing:border-box;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font:87.5%/1.5 sans-serif;letter-spacing:.02em;color:#000}@media (min-width:600px){html{font-size:100%}}@media (min-width:800px){html{font-size:112.5%}}@media (min-width:1000px){html{font-size:125%}}*,:after,:before{box-sizing:inherit}h1,h2,h3{margin:1.5em 0 .5em;font-family:Georgia,serif}h1,h2{line-height:1.2}h1{font-size:1.75em}h2{font-size:1.25em}h3{font-size:1.1em}p{margin:1em 0}a{color:#2d7ab3;text-decoration:none}a:visited{color:#882db3}a:focus,a:hover{color:#2d7ab3;text-decoration:underline}code{border-radius:.2em;color:#fff;background:#000;padding:.1em .3em;font-size:.9em}.page{max-width:35em;margin:0 auto;padding:1em 2em}.post{padding-bottom:3em;border-bottom:2px solid #ccc}.post-header{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-align:baseline;-webkit-align-items:baseline;-ms-flex-align:baseline;align-items:baseline;-webkit-box-pack:justify;-webkit-justify-content:space-between;-ms-flex-pack:justify;justify-content:space-between;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;margin-right:-.5em;margin-left:-.5em}.post-headline{padding-right:.28571em;padding-left:.28571em}.post-date{padding-right:.5em;padding-left:.5em}.post-date>a{color:inherit}.post-date>a:focus,.post-date>a:hover{color:#2d7ab3;text-decoration:none}.profile{margin:4em 0 2em;text-align:center;font-size:.8em}.profile-image{display:block;margin:0 auto;width:70px;border:3px solid transparent;border-radius:99em;overflow:hidden;background:-webkit-radial-gradient(31px,#000 97%,transparent 100%) no-repeat;background:radial-gradient(31px,#000 97%,transparent 100%) no-repeat}.profile-image:focus,.profile-image:hover{border-color:#2d7ab3}.profile-image>img{display:block;width:64px;height:64px}.profile>h3{margin:1em 0 0}.profile>p{margin:.5em 0 0}.profile a{color:inherit}.profile a:focus,.profile a:hover{color:#2d7ab3;text-decoration:none}</style>
+<link rel="canonical" href="https://au.si/responsive-image-types">
+<link rel="icon" href="/images/profile-64.jpg" type="image/jpeg">
+</head>
+<body>
+<div class="page h-entry">
+<article class="post">
+<header class="post-header">
+<h1 class="post-headline p-name">Responsive Images and art direction or viewport&#x2F;DPR-based selection</h1>
+<time class="post-date dt-published" datetime="2016-04-20"><a class="u-url" href="/responsive-image-types">20 Apr 2016</a></time>
+</header>
+<div class="e-content">
+<p>When it comes to responsive images there are two main topics that are handled by <code>&lt;picture&gt;</code>, <code>&lt;source&gt;</code>, <code>srcset</code> and <code>sizes</code>:</p>
+<p><strong>Viewport/DPR-based selection</strong> is about serving the “best” image to the client. Smaller ones for small screens, larger ones for large screens and larger ones for screens with a higher pixel density (e.g. retina displays). The contents of these images are always the same, no matter how large or small, the aspect ratio and the actual image content is the same. The goal is simply to save bandwidth and processing power on the client.</p>
+<p>When it comes to <strong>art direction</strong>, the goal is a bit different. It’s about changing the actual appearance of the image under certain circumstances. E.g. showing a cropped version on smaller screens, a portrait format on very tall screens or even a special monochrome version for colorless screens.</p>
+<h2 id="should-we-use-picture-and-source-or-srcset-and-sizes-">Should we use <code>&lt;picture&gt;</code> and <code>&lt;source&gt;</code> or <code>srcset</code> and <code>sizes</code>?</h2>
+<p>It’s important to pay attention to the difference between viewport/DPR-based selection and art direction because it defines which responsive image feature we should use. <code>&lt;picture&gt;</code> and <code>&lt;source&gt;</code> should be used for art-direction while <code>srcset</code> and <code>sizes</code> is all you need for viewport/DPR-based selection.</p>
+<h2 id="why-not-just-always-use-picture-and-source-">Why not just always use <code>&lt;picture&gt;</code> and <code>&lt;source&gt;</code>?</h2>
+<p>The problem with <code>&lt;picture&gt;</code> and <code>&lt;source&gt;</code> is that the browser <em>has to</em> follow the instructions of them and cannot optimize for certain cases. With <code>srcset</code> the browser is allowed to select any of the images, whichever it thinks fits better. Chrome for example doesn’t download a smaller version of an image if it has already a larger one in the cache. In the future a browser may decide to download smaller images of a <code>srcset</code> if the user is on a slow network.</p>
+<h2 id="but-what-if-we-need-both-features-for-one-image-">But what if we need both features for one image?</h2>
+<p>If you want to use art direction for an image, you can (and probably should) combine it with viewport/DPR-based selection to get the best of both worlds, but it’s very important to use them correctly.</p>
+<h2 id="how-do-i-know-if-my-responsive-image-is-configured-correctly-">How do I know if my responsive image is configured correctly?</h2>
+<p>Responsive images are hard to test. Because of that I created a bookmarklet that helps you find problems with your images. It’s very easy to use: Just <a href="https://ausi.github.io/respimagelint/">add it to your browser</a>, go to your website and klick the bookmarklet.</p>
+<p>If you experience problems with the bookmarklet feel free to report an issue on GitHub: <a href="https://github.com/ausi/respimagelint">ausi/respimagelint</a>.</p>
+</div>
+</article>
+<footer class="profile h-card">
+<a href="/" class="profile-image">
+<img class="u-photo" alt="Martin Auswöger"
+srcset="/images/profile-128.jpg 2x"
+src="/images/profile-64.jpg"
+>
+</a>
+<h3><a class="u-email p-name" href="mailto:martin@auswoeger.com" rel="me">Martin Auswöger</a></h3>
+<p>
+@<a class="p-nickname" href="/">ausi</a> on
+<a class="u-url" href="https://twitter.com/ausi" rel="me">Twitter</a>,
+<a class="u-url" href="https://github.com/ausi" rel="me">GitHub</a> and
+<a class="u-url" href="https://stackoverflow.com/users/1031606/ausi" rel="me">Stack Overflow</a>
+</p>
+</footer>
+</div>
+</body>
+</html>
