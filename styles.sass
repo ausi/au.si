@@ -51,6 +51,7 @@ samp
 $text-color: black
 $link-color: #2D7AB3
 $link-visited-color: #882DB3
+$background-color-light: #EEEEEE
 $background-color: white
 $border-color: #CCCCCC
 
@@ -102,18 +103,22 @@ a
 
 pre, code
 	border-radius: 0.2em
-	color: $background-color
-	background: $text-color
 
 code
 	padding: 0.1em 0.3em
 	font-size: 0.9em
+	background: $background-color-light
+	box-shadow: 0 0 0 0.5px $border-color
 
 pre
 	padding: 0.5em 0.75em
 	-webkit-overflow-scrolling: touch
+	color: $background-color
+	background: $text-color
 	> code
 		padding: 0
+		background: transparent
+		box-shadow: none
 
 .page
 	max-width: 35em
