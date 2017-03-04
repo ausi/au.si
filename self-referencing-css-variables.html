@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Self-Referencing CSS Variables</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Currently it is not possible to make a custom property in CSS reference itself. But this could be useful for several cases, e.g. if you want to modify a number for every nesting level of the same element: :root { --border-width: 50px; } .component { border: var(--border-width) solid red; --border-width: calc(var(--border-width) &#x2F; 2); }">
+<style>html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,footer,header{display:block}a{background-color:transparent}a:active,a:hover{outline:0}img{border:0}pre{overflow:auto}code,pre{font-family:monospace,monospace;font-size:1em}html{box-sizing:border-box;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font:87.5%/1.5 system-ui,-apple-system,BlinkMacSystemFont,sans-serif;color:#000}@media (min-width:600px){html{font-size:100%}}@media (min-width:800px){html{font-size:112.5%}}@media (min-width:1000px){html{font-size:125%}}*,:after,:before{box-sizing:inherit}h1,h3{margin:1.5em 0 .5em;font-weight:inherit}h1{line-height:1.2;font-size:1.75em}h3{font-size:1.25em}p{margin:1em 0}a{color:#2d7ab3;text-decoration:none}a:visited{color:#882db3}a:focus,a:hover{color:#2d7ab3;text-decoration:underline}code,pre{border-radius:.2em}code{padding:.1em .3em;font-size:.9em;background:#eee;box-shadow:0 0 0 .5px #ccc}pre{padding:.5em .75em;-webkit-overflow-scrolling:touch;color:#fff;background:#000}pre>code{padding:0;background:transparent;box-shadow:none}.page{max-width:35em;margin:0 auto;padding:1em 2em}.post{padding-bottom:3em;border-bottom:2px solid #ccc}.post-header{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:baseline;-ms-flex-align:baseline;align-items:baseline;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-wrap:wrap;flex-wrap:wrap;margin-right:-.5em;margin-left:-.5em}.post-headline{padding-right:.28571em;padding-left:.28571em}.post-date{padding-right:.5em;padding-left:.5em}.post-date>a{color:inherit}.post-date>a:focus,.post-date>a:hover{color:#2d7ab3;text-decoration:none}.profile{margin:4em 0 2em;text-align:center;font-size:.8em}.profile-image{display:block;margin:0 auto;width:70px;border:3px solid transparent;border-radius:99em;overflow:hidden;background:-webkit-radial-gradient(31px,#000 97%,transparent 100%) no-repeat;background:radial-gradient(31px,#000 97%,transparent 100%) no-repeat}.profile-image:focus,.profile-image:hover{border-color:#2d7ab3}.profile-image>img{display:block;width:64px;height:64px}.profile>h3{margin:1em 0 0}.profile>p{margin:.5em 0 0}.profile a{color:inherit}.profile a:focus,.profile a:hover{color:#2d7ab3;text-decoration:none}.token.punctuation{color:#f8f8f2}.token.property{color:#f92672}.token.selector{color:#a6e22e}.token.atrule,.token.function{color:#e6db74}</style>
+<link rel="canonical" href="https://au.si/self-referencing-css-variables">
+<link rel="icon" href="/images/profile-64.jpg" type="image/jpeg">
+</head>
+<body>
+<div class="page h-entry">
+<article class="post">
+<header class="post-header">
+<h1 class="post-headline p-name">Self-Referencing CSS Variables</h1>
+<time class="post-date dt-published" datetime="2017-03-03"><a class="u-url" href="/self-referencing-css-variables">3 Mar 2017</a></time>
+</header>
+<div class="e-content">
+<p>Currently it is not possible to make a custom property in CSS reference itself. But this could be useful for several cases, e.g. if you want to modify a number for every nesting level of the same element:</p>
+<pre><code class="lang-css"><span class="token selector">:root</span> <span class="token punctuation">{</span>
+	<span class="token property">--border-width</span><span class="token punctuation">:</span> 50px<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token selector">.component</span> <span class="token punctuation">{</span>
+	<span class="token property">border</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--border-width<span class="token punctuation">)</span> solid red<span class="token punctuation">;</span>
+	<span class="token property">--border-width</span><span class="token punctuation">:</span> <span class="token function">calc</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--border-width<span class="token punctuation">)</span> / 2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>If self referencing would work, for every nesting level of <code>.component</code> the width of the border would be half as thick as its parent.</p>
+<p>Luckily there is a workaround for that once native mixins via <code>@apply</code> <a href="http://caniuse.com/#feat=css-apply-rule">get into browsers</a>. This example does actually work the way we want:</p>
+<pre><code class="lang-css"><span class="token selector">:root</span> <span class="token punctuation">{</span>
+	<span class="token property">--border-width</span><span class="token punctuation">:</span> 50px<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token selector">.component</span> <span class="token punctuation">{</span>
+	<span class="token property">border</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--border-width<span class="token punctuation">)</span> solid red<span class="token selector">;
+	--mixin:</span> <span class="token punctuation">{</span>
+		<span class="token property">--border-width</span><span class="token punctuation">:</span> <span class="token function">calc</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--border-width<span class="token punctuation">)</span> / 2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">}</span><span class="token punctuation">;</span>
+	<span class="token atrule"><span class="token rule">@apply</span> --mixin<span class="token punctuation">;</span></span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>You can see it in action <a href="http://codepen.io/anon/pen/EWyZyM">on CodePen</a>. Currently you need Google Chrome with the experimental web plattform features flag enabled to see it working.</p>
+</div>
+</article>
+<footer class="profile h-card">
+<a href="/" class="profile-image">
+<img class="u-photo" alt="Martin Auswöger"
+srcset="/images/profile-128.jpg 2x"
+src="/images/profile-64.jpg"
+>
+</a>
+<h3><a class="u-email p-name" href="mailto:martin@auswoeger.com" rel="me">Martin Auswöger</a></h3>
+<p>
+@<a class="p-nickname" href="/">ausi</a> on
+<a class="u-url" href="https://twitter.com/ausi" rel="me">Twitter</a>,
+<a class="u-url" href="https://github.com/ausi" rel="me">GitHub</a> and
+<a class="u-url" href="https://stackoverflow.com/users/1031606/ausi" rel="me">Stack Overflow</a>
+</p>
+</footer>
+</div>
+</body>
+</html>
