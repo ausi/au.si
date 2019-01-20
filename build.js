@@ -9,7 +9,7 @@ var uncss = require('uncss');
 var marked = require('marked');
 var mustache = require('mustache');
 var request = require('request');
-var lwip = require('lwip');
+var jimp = require('jimp');
 var prism = require('prismjs');
 require('prismjs/components/prism-ini');
 
@@ -18,7 +18,7 @@ var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oc
 var markdownConfig = {
 	gfm: true,
 	tables: true,
-	breaks: true,
+	breaks: false,
 	sanitize: true,
 	highlight: function (code, lang) {
 		if (lang && prism.languages[lang]) {
@@ -182,7 +182,7 @@ function buildImages(callback) {
 			fs.mkdirSync(path.join(__dirname, 'tmp'));
 		}
 		fs.mkdirSync(path.join(__dirname, 'tmp', imageHash));
-		lwip.open(originalImage, 'jpg', function(err, image){
+		jimp.read(originalImage, function(err, image){
 			if (err) {
 				console.error(err);
 				callback();
@@ -195,9 +195,9 @@ function buildImages(callback) {
 						console.error(err);
 						return;
 					}
-					clone.batch()
-						.resize(size, size)
-						.writeFile(path.join(__dirname, 'tmp', imageHash, 'profile-' + size + '.jpg'), 'jpg', {quality: 85}, function(err) {
+					clone.resize(size, size)
+						.quality(85)
+						.write(path.join(__dirname, 'tmp', imageHash, 'profile-' + size + '.jpg'), function(err) {
 							console.log('profile-' + size + '.jpg');
 							done++;
 							if (done === sizes.length) {
