@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CSS Conditions Today</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Reiterating on my idea for CSS conditions I found a new way for creating such conditions using existing CSS features. You probably know Roman Komarov’s article “Conditions for CSS Variables” where he describes how you can create binary conditions for properties that support calc(). This was a great inspiration and together with a CSS trick I learned from Lea Verou called “Static Interpolation” I was able to create CSS conditions that are similar to media queries and support (nearly) all CSS properties.">
+<style>html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,footer,header{display:block}a{background-color:transparent}a:active,a:hover{outline:0}img{border:0}pre{overflow:auto}code,pre{font-family:monospace,monospace;font-size:1em}html{box-sizing:border-box;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font:87.5%/1.5 system-ui,-apple-system,BlinkMacSystemFont,sans-serif;color:#000}@media (min-width:600px){html{font-size:100%}}@media (min-width:800px){html{font-size:112.5%}}@media (min-width:1000px){html{font-size:125%}}*,:after,:before{box-sizing:inherit}h1,h2,h3{margin:1.5em 0 .5em;font-weight:inherit}h1,h2{line-height:1.2}h1{font-size:1.75em}h2{font-size:1.5em}h3{font-size:1.25em}p{margin:1em 0}a{color:#2d7ab3;text-decoration:none}a:visited{color:#882db3}a:focus,a:hover{color:#2d7ab3;text-decoration:underline}code,pre{border-radius:.2em}code{padding:.1em .3em;font-size:.9em;background:#eee;box-shadow:0 0 0 .5px #ccc}pre{padding:.5em .75em;-webkit-overflow-scrolling:touch;color:#fff;background:#000}pre>code{padding:0;background:transparent;box-shadow:none}.page{max-width:35em;margin:0 auto;padding:1em 2em}.post{padding-bottom:3em;border-bottom:2px solid #ccc}.post-header{display:-ms-flexbox;display:flex;-ms-flex-align:baseline;align-items:baseline;-ms-flex-pack:justify;justify-content:space-between;-ms-flex-wrap:wrap;flex-wrap:wrap;margin-right:-.5em;margin-left:-.5em}.post-headline{padding-right:.28571em;padding-left:.28571em}.post-date{padding-right:.5em;padding-left:.5em}.post-date>a{color:inherit}.post-date>a:focus,.post-date>a:hover{color:#2d7ab3;text-decoration:none}.profile{margin:4em 0 2em;text-align:center;font-size:.8em}.profile-image{display:block;margin:0 auto;width:70px;border:3px solid transparent;border-radius:99em;overflow:hidden;background:radial-gradient(31px,#000 97%,transparent 100%) no-repeat}.profile-image:focus,.profile-image:hover{border-color:#2d7ab3}.profile-image>img{display:block;width:64px;height:64px}.profile>h3{margin:1em 0 0}.profile>p{margin:.5em 0 0}.profile a{color:inherit}.profile a:focus,.profile a:hover{color:#2d7ab3;text-decoration:none}.token.comment{color:#708090}.token.punctuation{color:#f8f8f2}.token.property,.token.tag{color:#f92672}.token.attr-name,.token.selector{color:#a6e22e}.token.atrule,.token.attr-value,.token.function{color:#e6db74}</style>
+<link rel="canonical" href="https://au.si/css-conditions-today">
+<link rel="icon" href="/images/profile-64.jpg" type="image/jpeg">
+</head>
+<body>
+<div class="page h-entry">
+<article class="post">
+<header class="post-header">
+<h1 class="post-headline p-name">CSS Conditions Today</h1>
+<time class="post-date dt-published" datetime="2019-01-20"><a class="u-url" href="/css-conditions-today">20 Jan 2019</a></time>
+</header>
+<div class="e-content">
+<p>Reiterating on my <a href="https://au.si/css-conditions-cq-alternative">idea for CSS conditions</a>
+I found a new way for creating such conditions using existing CSS features.
+You probably know Roman Komarov’s article <a href="https://www.kizu.ru/conditions-for-css-variables/">“Conditions for CSS Variables”</a>
+where he describes how you can create binary conditions
+for properties that support <code>calc()</code>.
+This was a great inspiration and together with a CSS trick
+I learned from Lea Verou called <a href="https://youtu.be/eVnUDTtOLE0?t=1167">“Static Interpolation”</a>
+I was able to create CSS conditions that are similar to media queries
+and support (nearly) all CSS properties.</p>
+<h2 id="binary-conditions">Binary Conditions</h2>
+<p>First, lets take look at an example of a binary condition:</p>
+<pre><code class="lang-css"><span class="token selector">:root</span> <span class="token punctuation">{</span>
+	<span class="token property">--is-fancy</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token selector">.is-fancy</span> <span class="token punctuation">{</span>
+	<span class="token property">--is-fancy</span><span class="token punctuation">:</span> 1<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token selector">.component</span> <span class="token punctuation">{</span>
+	<span class="token property">font-family</span><span class="token punctuation">:</span> Arial<span class="token punctuation">;</span>
+	<span class="token property">animation</span><span class="token punctuation">:</span> 1s component-is-fancy paused<span class="token punctuation">;</span>
+	<span class="token property">animation-delay</span><span class="token punctuation">:</span> <span class="token function">calc</span><span class="token punctuation">(</span><span class="token punctuation">(</span>1 - <span class="token function">var</span><span class="token punctuation">(</span>--is-fancy<span class="token punctuation">)</span><span class="token punctuation">)</span> * 1s<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token atrule"><span class="token rule">@keyframes</span> component-is-fancy</span> <span class="token punctuation">{</span>
+	<span class="token selector">from</span> <span class="token punctuation">{</span>
+		<span class="token property">font-family</span><span class="token punctuation">:</span> Comic Sans MS<span class="token punctuation">;</span>
+	<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>Here every <code>.component</code> that is somewhere inside an <code>.is-fancy</code> element
+gets a different font-family applied.
+This works because if <code>--is-fancy</code> is <code>0</code>
+the animation delay gets set to <code>1s</code>
+and no animation will be applied,
+but if the variable is set to <code>1</code>
+the delay gets set to <code>0s</code>
+and therefore the animation takes effect.
+By using the <code>paused</code> play state the animation will never actually animate.
+This technique can be applied to all properties
+that can be used inside a <code>@keyframes</code> animation
+(which seems to differ between browsers).</p>
+<h2 id="media-query-like-conditions">Media Query Like Conditions</h2>
+<p>Now, lets say we have a <code>--width</code> variable
+that tells our component how much space is available.
+We could then create conditions
+that work like <code>(min-width)</code> media queries:</p>
+<pre><code class="lang-css"><span class="token selector">.component</span> <span class="token punctuation">{</span>
+	<span class="token property">animation</span><span class="token punctuation">:</span> 10000s step-end component paused<span class="token punctuation">;</span>
+	<span class="token property">animation-delay</span><span class="token punctuation">:</span> <span class="token function">calc</span><span class="token punctuation">(</span><span class="token punctuation">(</span>0 - <span class="token function">var</span><span class="token punctuation">(</span>--width<span class="token punctuation">)</span><span class="token punctuation">)</span> * 1s<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token atrule"><span class="token rule">@keyframes</span> component</span> <span class="token punctuation">{</span>
+	<span class="token comment">/* (min-width: 400px) */</span> <span class="token selector">4%</span> <span class="token punctuation">{</span>
+		<span class="token property">font-size</span><span class="token punctuation">:</span> 20px<span class="token punctuation">;</span>
+	<span class="token punctuation">}</span>
+	<span class="token comment">/* (min-width: 650px) */</span> <span class="token selector">6.5%</span> <span class="token punctuation">{</span>
+		<span class="token property">text-align</span><span class="token punctuation">:</span> center<span class="token punctuation">;</span>
+	<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>Here we use a negative delay between <code>0s</code> and <code>-10000s</code>
+to control at which point in the animation we want to start.
+One second is corresponding to one pixel in this case,
+so the <code>4%</code> step in the animation gets applied
+only if <code>--width</code> is <code>400</code> or greater.</p>
+<h2 id="did-we-just-invent-container-queries-in-plain-css-">Did we just invent Container Queries in plain CSS?</h2>
+<p>Well, sort of.
+The big thing that’s missing for calling it a container query
+is where the value for <code>--width</code> should come from.
+One way would be to start at the <code>html</code> element with <code>--width: 100vw;</code>
+and let every layout element update the value for its children.
+Like <code>--width: calc(parent-var(--width) / 2);</code> for a <code>50%</code> container.
+But since we need a unit-less number for our animation delay
+and <code>calc(100vw / 1px)</code> is invalid in CSS
+we have to use a bunch of media queries
+that set the initial value of <code>--width</code> for us:</p>
+<pre><code class="lang-css"><span class="token atrule"><span class="token rule">@media</span> <span class="token punctuation">(</span><span class="token property">width</span><span class="token punctuation">:</span> 1px<span class="token punctuation">)</span></span> <span class="token punctuation">{</span> <span class="token selector">:root</span> <span class="token punctuation">{</span> <span class="token property">--width</span><span class="token punctuation">:</span> 1<span class="token punctuation">;</span> <span class="token punctuation">}</span> <span class="token punctuation">}</span>
+<span class="token atrule"><span class="token rule">@media</span> <span class="token punctuation">(</span><span class="token property">width</span><span class="token punctuation">:</span> 2px<span class="token punctuation">)</span></span> <span class="token punctuation">{</span> <span class="token selector">:root</span> <span class="token punctuation">{</span> <span class="token property">--width</span><span class="token punctuation">:</span> 2<span class="token punctuation">;</span> <span class="token punctuation">}</span> <span class="token punctuation">}</span>
+<span class="token atrule"><span class="token rule">@media</span> <span class="token punctuation">(</span><span class="token property">width</span><span class="token punctuation">:</span> 3px<span class="token punctuation">)</span></span> <span class="token punctuation">{</span> <span class="token selector">:root</span> <span class="token punctuation">{</span> <span class="token property">--width</span><span class="token punctuation">:</span> 3<span class="token punctuation">;</span> <span class="token punctuation">}</span> <span class="token punctuation">}</span>
+<span class="token comment">/* … and thousands more … */</span>
+</code></pre>
+<p>Sadly <code>parent-var()</code> isn’t a thing yet in CSS,
+so layout elements would need an extra <code>&lt;div&gt;</code>
+to achieve the same functionality:</p>
+<pre><code class="lang-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>layout-element<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>inherit-vars<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+		…
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+</code></pre>
+<pre><code class="lang-css"><span class="token selector">.layout-element</span> <span class="token punctuation">{</span>
+	<span class="token property">width</span><span class="token punctuation">:</span> 50%<span class="token punctuation">;</span>
+	<span class="token property">--set-width</span><span class="token punctuation">:</span> <span class="token function">calc</span><span class="token punctuation">(</span><span class="token function">var</span><span class="token punctuation">(</span>--width<span class="token punctuation">)</span> / 2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token selector">.inherit-vars</span> <span class="token punctuation">{</span>
+	<span class="token property">--width</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--set-width<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>You can take a look at the following example
+that shows how this works for a simple component
+that is styled based on the context it was placed in:
+<a href="https://codepen.io/ausi/pen/rPBNwJ/left/?editors=0100">codepen.io/ausi/pen/rPBNwJ</a><br>More ideas on how to use CSS conditions as container queries
+can be found in <a href="https://au.si/css-conditions-cq-alternative">my previous article</a>.</p>
+<h2 id="should-we-use-this-in-production-">Should we use this in production?</h2>
+<p>I would say it depends.
+Using thousands of media queries to set a CSS variable
+is probably one of the parts that shouldn’t go in production.
+But depending on the project
+there might be simpler ways to set the <code>--width</code> variable.
+Another caveat to be aware of is that the properties
+that can be used inside <code>@keyframes</code>
+seem to vary a lot between browsers.</p>
+<h2 id="why-isn-t-this-a-native-feature-of-css-yet-">Why isn’t this a native feature of CSS yet?</h2>
+<p>I <a href="https://discourse.wicg.io/t/css-conditions-with-variables/2048">proposed a native variation</a>
+of this about two years ago to the WICG but it didn’t get much traction.
+Maybe this technique of “faking” CSS conditions
+can finally push the topic forward
+as it shows that browsers are already able to handle them.
+If you like it, please spread the word
+so that browser vendors can become aware of
+how great CSS conditions would be for us web developers.</p>
+</div>
+</article>
+<footer class="profile h-card">
+<a href="/" class="profile-image">
+<img class="u-photo" alt="Martin Auswöger"
+srcset="/images/profile-128.jpg 2x"
+src="/images/profile-64.jpg"
+>
+</a>
+<h3><a class="u-email p-name" href="mailto:martin@auswoeger.com" rel="me">Martin Auswöger</a></h3>
+<p>
+@<a class="p-nickname" href="/">ausi</a> on
+<a class="u-url" href="https://twitter.com/ausi" rel="me">Twitter</a>,
+<a class="u-url" href="https://github.com/ausi" rel="me">GitHub</a>,
+<a class="u-url" href="https://www.patreon.com/ausi" rel="me">Patreon</a> and
+<a class="u-url" href="https://stackoverflow.com/users/1031606/ausi" rel="me">Stack Overflow</a>
+</p>
+</footer>
+</div>
+</body>
+</html>
